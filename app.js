@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('./db/userModel.js');
 const auth = require('./auth');
+const Newsletter = require('./db/newsletterModel.js')
 
 // connection to database
 
@@ -115,6 +116,42 @@ app.post('/login', (req, res) => {
         });
       });
 });
+
+// newsletter endpoint
+
+app.post('/newsletter', (req, res) => {
+    
+  Newsletter.findOne({ newmail: req.body.newmail }) // checks if email exists in db, mongoose method
+    .then((newsletter) => {
+          return res.status(400).send({
+           message: 'Du bist bereits angemeldet',
+               error,
+             });
+           })
+ 
+    .catch((e)=>{
+      const newsletter = new Newsletter({
+        newmail: req.body.newmail,
+      })
+      newsletter
+      .save() // save new newsletter user in database
+      .then((result) => {
+        res.status(201).send({
+          message: 'Du hast Dich erfolgreich zum Newsletter angemeldet',
+          result,
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          message: 'Newsletteranmeldung nicht erfolgreich',
+          error,
+        });
+      });
+      
+   });
+  });
+    
+
 
 // free endpoint
 
