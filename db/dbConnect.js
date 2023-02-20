@@ -11,7 +11,7 @@ async function dbConnect() {
             }
         )
     .then(() => {
-        console.log('Erfolgreiche Verbingung zu MongoDB Atlas');
+        console.log('Erfolgreiche Verbindung zu MongoDB Atlas');
     })
     .catch((error) => {
         console.log('Verbingung zu MongDB Atlas konnte nicht hergestellt werden!');

@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('./db/userModel.js');
 const auth = require('./auth');
+const cors = require('cors');
+const Newsletter = require('./db/newsletterModel.js')
 
 // connection to database
 
@@ -23,8 +25,13 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, PATCH, OPTIONS'
   );
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
   next();
 });
+
+app.use(cors());
 
 // body parser configuration
 
@@ -76,6 +83,8 @@ app.get('/', (req, res, next) => {
 // login endpoint
 
 app.post('/login', (req, res) => {
+
+
   User.findOne({ email: req.body.email }) // checks if email exists, mongoose method
       .then((user) => {
         bcrypt.compare(req.body.password, user.password) // compare entered psw with hashed psw in database bcrypt method
@@ -115,6 +124,20 @@ app.post('/login', (req, res) => {
         });
       });
 });
+
+// newsletter endpoint
+
+app.post('/newsletter', async (req, res) => {
+  const configuration = new Newsletter({
+              newmail: req.body.newmail,
+            })
+  try {
+    await configuration.save(); 
+  } catch (error) {
+    res.status(500).send(error)
+  }
+});
+
 
 // free endpoint
 
