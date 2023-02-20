@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('./db/userModel.js');
 const auth = require('./auth');
-const cors = require('cors');
 const Newsletter = require('./db/newsletterModel.js')
 
 // connection to database
@@ -25,13 +24,10 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, PATCH, OPTIONS'
   );
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
   next();
 });
 
-app.use(cors());
+
 
 // body parser configuration
 
