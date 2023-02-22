@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('./db/userModel.js');
 const auth = require('./auth');
+const Newsletter = require('./db/newsletterModel.js')
 
 // connection to database
 
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+
 
 // body parser configuration
 
@@ -76,6 +79,8 @@ app.get('/', (req, res, next) => {
 // login endpoint
 
 app.post('/login', (req, res) => {
+
+
   User.findOne({ email: req.body.email }) // checks if email exists, mongoose method
       .then((user) => {
         bcrypt.compare(req.body.password, user.password) // compare entered psw with hashed psw in database bcrypt method
@@ -115,6 +120,20 @@ app.post('/login', (req, res) => {
         });
       });
 });
+
+// newsletter endpoint
+
+app.post('/newsletter', async (req, res) => {
+  const configuration = new Newsletter({
+              newmail: req.body.newmail,
+            })
+  try {
+    await configuration.save(); 
+  } catch (error) {
+    res.status(500).send(error)
+  }
+});
+
 
 // free endpoint
 
