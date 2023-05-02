@@ -27,8 +27,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 // body parser configuration
 
 app.use(bodyParser.json());
